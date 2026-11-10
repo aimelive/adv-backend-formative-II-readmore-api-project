@@ -1,0 +1,88 @@
+### Health check
+GET http://localhost:3000/
+### Create author
+POST http://localhost:3000/authors
+Content-Type: application/json
+
+{ "name": "Chinua Achebe", "country": "Nigeria", "bio": "Nigerian novelist" }
+@authorId = 6af23693ca9915b64df768f9
+
+### Get all authors
+GET http://localhost:3000/authors
+
+### Get one author
+GET http://localhost:3000/authors/{{authorId}}
+
+### Update author
+PUT http://localhost:3000/authors/{{authorId}}
+Content-Type: application/json
+
+{ "bio": "Author of Things Fall Apart" }
+
+### Missing name (should be 400)
+POST http://localhost:3000/authors
+Content-Type: application/json
+
+{}
+
+### Author not found (should be 404)
+GET http://localhost:3000/authors/507f1f77bcf86cd799439011
+
+### Invalid id (should be 400)
+GET http://localhost:3000/authors/abc
+### Create book
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{ "title": "Things Fall Apart", "genre": "Fiction", "price": 15, "publishedYear": 1958, "author": "{{authorId}}" }
+@bookId = 6af237b4ca9915b64df768fb
+
+### Get all books
+GET http://localhost:3000/books
+
+### Get one book
+GET http://localhost:3000/books/{{bookId}}
+
+### Update book
+PUT http://localhost:3000/books/{{bookId}}
+Content-Type: application/json
+
+{ "price": 18 }
+
+### Book not found (should be 404)
+GET http://localhost:3000/books/507f1f77bcf86cd799439011
+
+### Books by author
+GET http://localhost:3000/authors/{{authorId}}/books
+
+### Author not found (should be 404)
+GET http://localhost:3000/authors/507f1f77bcf86cd799439011/books
+### Rule 1: fake author (should be 400)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{ "title": "Ghost Book", "genre": "Fiction", "price": 10, "publishedYear": 2000, "author": "507f1f77bcf86cd799439011" }
+### Rule 2: duplicate title, different case (should be 409)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{ "title": "things fall apart", "genre": "Fiction", "price": 12, "publishedYear": 1958, "author": "{{authorId}}" }
+
+### Rule 2: update book with its own title (should be 200)
+PUT http://localhost:3000/books/{{bookId}}
+Content-Type: application/json
+
+{ "title": "Things Fall Apart" }
+
+### Create second author
+POST http://localhost:3000/authors
+Content-Type: application/json
+
+{ "name": "Ngugi wa Thiong'o", "country": "Kenya" }
+@authorId2 = 6af23bc33670ebef2b7c2a42
+
+### Rule 2: same title, different author (should be 201)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{ "title": "Things Fall Apart", "genre": "Fiction", "price": 20, "publishedYear": 2020, "author": "{{authorId2}}" }
