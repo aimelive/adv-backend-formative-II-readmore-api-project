@@ -4,9 +4,9 @@ GET http://localhost:3000/
 POST http://localhost:3000/authors
 Content-Type: application/json
 
-{ "name": "Chinua Achebe", "country": "Nigeria", "bio": "Nigerian novelist" }
+{ "name": "Aime Ndayambaje", "country": "Rwanda", "bio": "Software student" }
 ###
-@authorId = 6af23693ca9915b64df768f9
+@authorId = 6af4d21ce9a38754b4c21ac4
 
 ### Get all authors
 GET http://localhost:3000/authors
@@ -18,7 +18,7 @@ GET http://localhost:3000/authors/{{authorId}}
 PUT http://localhost:3000/authors/{{authorId}}
 Content-Type: application/json
 
-{ "bio": "Author of Things Fall Apart" }
+{ "bio": "Updated bio" }
 
 ### Missing name (should be 400)
 POST http://localhost:3000/authors
@@ -35,9 +35,9 @@ GET http://localhost:3000/authors/abc
 POST http://localhost:3000/books
 Content-Type: application/json
 
-{ "title": "Things Fall Apart", "genre": "Fiction", "price": 15, "publishedYear": 1958, "author": "{{authorId}}" }
+{ "title": "Rich Dad poor dad", "genre": "Drama", "price": 20, "publishedYear": 2002, "author": "{{authorId}}" }
 ###
-@bookId = 6af237b4ca9915b64df768fb
+@bookId = 6af4d274e9a38754b4c21ac6
 
 ### Get all books
 GET http://localhost:3000/books
@@ -74,13 +74,13 @@ Content-Type: application/json
 PUT http://localhost:3000/books/{{bookId}}
 Content-Type: application/json
 
-{ "title": "Things Fall Apart" }
+{ "title": "things fall apart" }
 
 ### Create second author
 POST http://localhost:3000/authors
 Content-Type: application/json
 
-{ "name": "Ngugi wa Thiong'o", "country": "Kenya" }
+{ "name": "Ngugi", "country": "Kenya" }
 ###
 @authorId2 = 6af23bc33670ebef2b7c2a42
 
@@ -89,3 +89,24 @@ POST http://localhost:3000/books
 Content-Type: application/json
 
 { "title": "Things Fall Apart", "genre": "Fiction", "price": 20, "publishedYear": 2020, "author": "{{authorId2}}" }
+
+### Rule 3: invalid price (should be 422)
+PUT http://localhost:3000/books/{{bookId}}
+Content-Type: application/json
+
+{ "price": 0 }
+
+### Rule 3: future published year (should be 422)
+PUT http://localhost:3000/books/{{bookId}}
+Content-Type: application/json
+
+{ "publishedYear": 2100 }
+
+### Rule 5: combined filters and sorting
+GET http://localhost:3000/books?genre=Fiction&minPrice=10&search=Things&sort=price&order=asc
+
+### Rule 6: author statistics
+GET http://localhost:3000/authors/{{authorId}}/stats
+
+### Rule 4: block deleting an author with books (should be 409)
+DELETE http://localhost:3000/authors/{{authorId}}
