@@ -5,6 +5,7 @@ POST http://localhost:3000/authors
 Content-Type: application/json
 
 { "name": "Chinua Achebe", "country": "Nigeria", "bio": "Nigerian novelist" }
+###
 @authorId = 6af23693ca9915b64df768f9
 
 ### Get all authors
@@ -35,6 +36,7 @@ POST http://localhost:3000/books
 Content-Type: application/json
 
 { "title": "Things Fall Apart", "genre": "Fiction", "price": 15, "publishedYear": 1958, "author": "{{authorId}}" }
+###
 @bookId = 6af237b4ca9915b64df768fb
 
 ### Get all books
@@ -47,7 +49,7 @@ GET http://localhost:3000/books/{{bookId}}
 PUT http://localhost:3000/books/{{bookId}}
 Content-Type: application/json
 
-{ "price": 18 }
+{ "price": 19 }
 
 ### Book not found (should be 404)
 GET http://localhost:3000/books/507f1f77bcf86cd799439011
@@ -79,6 +81,7 @@ POST http://localhost:3000/authors
 Content-Type: application/json
 
 { "name": "Ngugi wa Thiong'o", "country": "Kenya" }
+###
 @authorId2 = 6af23bc33670ebef2b7c2a42
 
 ### Rule 2: same title, different author (should be 201)
